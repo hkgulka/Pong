@@ -1,4 +1,4 @@
-package client.model;
+package main.client.model;
 
 // Represents a paddle with a location and a y speed
 public class Paddle {

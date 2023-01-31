@@ -1,4 +1,4 @@
-package client.model;
+package main.client.model;
 
 // Represents a ball having x and y coordinates and x and y speed components
 public class Ball {

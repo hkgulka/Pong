@@ -11,9 +11,9 @@ public class Game {
 
     public static final int MAX_SCORE = 3; // the max score a player can have
 
-    private client.model.Ball ball; // the ball
-    private client.model.Paddle paddleL; // the left paddle
-    private client.model.Paddle paddleR; // the right paddle
+    private Ball ball; // the ball
+    private Paddle paddleL; // the left paddle
+    private Paddle paddleR; // the right paddle
 
     private int oneScore; // the score of player 1
     private int twoScore; // the score of player 2
@@ -22,9 +22,9 @@ public class Game {
 
     // EFFECTS: constructs a game of pong with a ball and two paddles in default position, unmoving
     public Game() {
-        ball = new client.model.Ball();
-        paddleL = new client.model.Paddle(PADDLE_X);
-        paddleR = new client.model.Paddle(WIDTH - PADDLE_X - 1);
+        ball = new Ball();
+        paddleL = new Paddle(PADDLE_X);
+        paddleR = new Paddle(WIDTH - PADDLE_X - 1);
         prevWinner = Random().nextInt(2) + 1;
         oneScore = 0;
         twoScore = 0;
@@ -35,9 +35,9 @@ public class Game {
     // EFFECTS: starts the round by moving the ball in the correct direction
     public void startRound() {
         if (prevWinner == 1) {
-            ball.redirectBall((-1 * client.model.Ball.TOTAL_SPEED), 0);
+            ball.redirectBall((-1 * Ball.TOTAL_SPEED), 0);
         } else {
-            ball.redirectBall(client.model.Ball.TOTAL_SPEED, 0);
+            ball.redirectBall(Ball.TOTAL_SPEED, 0);
         }
     }
 
