@@ -1,9 +1,10 @@
-package main.client.model;
+package main.model;
 
 // Represents a ball having x and y coordinates and x and y speed components
 public class Ball {
 
-    public static final int TOTAL_SPEED = 1; // the total speed vector length while moving
+    public static final int SPEED = 1; // the max speed of each direction in the velocity
+    public static final int DIAMETER = 1;
 
     private int x; // the x coordinate of the ball
     private int y; // the y coordinate of the ball

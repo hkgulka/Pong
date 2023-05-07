@@ -1,10 +1,11 @@
-package main.client.model;
+package main.model;
 
 // Represents a paddle with a location and a y speed
 public class Paddle {
 
-    public static final int RADIUS = 2; // the vertical radius of the paddle (pixels)
-    public static final int TOTAL_SPEED = 1; // the total speed of the paddle while moving
+    public static final int HEIGHT = 3; // the vertical of the paddle (pixels)
+    public static final int WIDTH = 1; // the width of the paddle
+    public static final int SPEED = 1; // the speed of the paddle while moving
 
     private int x; // the x coordinate of the paddle
     private int y; // the y coordinate of the paddle
@@ -18,7 +19,7 @@ public class Paddle {
         this.dY = 0;
     }
 
-    // REQUIRES: |dir_y| = TOTAL_SPEED
+    // REQUIRES: |dir_y| = SPEED
     // MODIFIES: this
     // EFFECTS: changes the paddle's y speed to the given value
     public void redirectPaddle(int dir_y) {
