@@ -14,51 +14,47 @@ public class Game {
     public static final int MAX_SCORE = 3; // the max score a player can have
 
     private Ball ball; // the ball
-    public Paddle paddleL; // the left paddle
-    public Paddle paddleR; // the right paddle
+    private Paddle paddle1; // the left paddle
+    private Paddle paddle2; // the right paddle
 
-    private int oneScore; // the score of player 1
-    private int twoScore; // the score of player 2
+    private int score1;
+    private int score2;
     private int prevWinner; // the previous round winner, player 1 or 2
-    private boolean gameOver; // true if the game is over
-    private boolean gameOn; // true if the game is in play
+    private GameStatus status; // the current status of the game
 
     // EFFECTS: constructs a game of pong with a ball and two paddles in default position, unmoving
     public Game() {
+
         ball = new Ball();
-        paddleL = new Paddle(PADDLE_X);
-        paddleR = new Paddle(WIDTH - PADDLE_X - 1);
+        paddle1 = new Paddle(PADDLE_X);
+        paddle2 = new Paddle(WIDTH - PADDLE_X - 1);
+        score1 = 0;
+        score2 = 0;
         prevWinner = 2;
-        oneScore = 0;
-        twoScore = 0;
-        gameOver = false;
-        gameOn = false;
+        status = GameStatus.NEW;
+
     }
 
     // EFFECTS: constructs a new game of pong, keeping the previous winner
     public Game(int prevWinner) {
         ball = new Ball();
-        paddleL = new Paddle(PADDLE_X);
-        paddleR = new Paddle(WIDTH - PADDLE_X - 1);
+        paddle1 = new Paddle(PADDLE_X);
+        paddle2 = new Paddle(WIDTH - PADDLE_X - 1);
         this.prevWinner = prevWinner;
-        oneScore = 0;
-        twoScore = 0;
-        gameOver = false;
-        gameOn = false;
+        status = GameStatus.NEW;
     }
 
     // MODIFIES: this
-    // EFFECTS: resets the position of the game's objects, keeping scores and previous winner
-    public void reset() {
-        ball = new Ball();
-        paddleL = new Paddle(PADDLE_X);
-        paddleR = new Paddle(WIDTH - PADDLE_X - 1);
+    // EFFECTS: updates the current state of the game
+    public void update() {
+        movePaddles();
+        moveBall();
     }
 
     // MODIFIES: this
     // EFFECTS: starts the round by moving the ball in the correct direction
     public void startRound() {
-        gameOn = true;
+        status = GameStatus.IN_PROGRESS;
         if (prevWinner == 1) {
             ball.redirectBall(-Ball.SPEED, 0);
         } else {
@@ -67,27 +63,73 @@ public class Game {
     }
 
     // MODIFIES: this
+    // EFFECTS: resets the position of the game's objects, keeping scores and previous winner
+    public void reset() {
+        status = GameStatus.BETWEEN_ROUNDS;
+        ball = new Ball();
+        paddle1 = new Paddle(PADDLE_X);
+        paddle2 = new Paddle(WIDTH - PADDLE_X - 1);
+    }
+
+
+    // MODIFIES: this
     // EFFECTS: increases the goal count for player who scored and updates previous winner
     public void goalScored(int player) {
-        gameOn = false;
+        status = GameStatus.BETWEEN_ROUNDS;
         if (player == 1) {
             prevWinner = 1;
-            oneScore += 1;
+            score1 += 1;
         } else {
             prevWinner = 2;
-            twoScore += 1;
-        }
-        if (oneScore >= MAX_SCORE || twoScore >= MAX_SCORE) {
-            gameOver = true;
+            score2 += 1;
         }
     }
-    
+
+    // EFFECTS: returns true if there is a game winner
+    public boolean checkWinner() {
+        return score1 >= MAX_SCORE || score2 >= MAX_SCORE;
+    }
+
+    // REQUIRES: player is 1 or 2, direction is -1 or 0 or 1
     // MODIFIES: this
+    // EFFECTS: changes the corresponding paddle to the given direction
+    public void redirectPaddle(int player, int direction) {
+        if (player == 1) {
+            if (direction == 1) {
+                paddle1.redirectPaddle(Paddle.SPEED);
+            } else if (direction == -1) {
+                paddle1.redirectPaddle(-Paddle.SPEED);
+            } else {
+                paddle1.redirectPaddle(0);
+            }
+        } else { // player == 2
+            if (direction == 1) {
+                paddle2.redirectPaddle(Paddle.SPEED);
+            } else if (direction == -1) {
+                paddle2.redirectPaddle(-Paddle.SPEED);
+            } else {
+                paddle2.redirectPaddle(0);
+            }
+        }
+    }
+
+    // MODIFIES: this, this.paddle1, this.paddle2
+    // EFFECTS: moves the paddles one frame in the given direction/speed
+    public void movePaddles() {
+        if (paddle1.getY() + paddle1.getDY() >= 0 && paddle1.getY() + paddle1.getDY() < HEIGHT) {
+            paddle1.movePaddle();
+        }
+        if (paddle2.getY() + paddle2.getDY() >= 0 && paddle2.getY() + paddle2.getDY() < HEIGHT) {
+            paddle2.movePaddle();
+        }
+    }
+
+    // MODIFIES: this, this.ball
     // EFFECTS: if ball is going to collide, calls collision method; else moves the ball
     public void moveBall() {
         Rectangle b = new Rectangle(ball.getX() + ball.getDX(), ball.getY() + ball.getDY(), Ball.DIAMETER, Ball.DIAMETER);
-        Rectangle p1 = new Rectangle(paddleL.getX(), paddleL.getY(), Paddle.WIDTH, Paddle.HEIGHT);
-        Rectangle p2 = new Rectangle(paddleR.getX(), paddleR.getY(), Paddle.WIDTH, Paddle.HEIGHT);
+        Rectangle p1 = new Rectangle(paddle1.getX(), paddle1.getY(), Paddle.WIDTH, Paddle.HEIGHT);
+        Rectangle p2 = new Rectangle(paddle2.getX(), paddle2.getY(), Paddle.WIDTH, Paddle.HEIGHT);
         // check if going to hit wall or paddle
         if (ball.getX() + ball.getDX() < 0 || ball.getX() + ball.getDX() >= WIDTH || ball.getY() + ball.getDY() < 0 || ball.getY() + ball.getDY() >= HEIGHT) {
             ballCollision("wall");
@@ -117,18 +159,18 @@ public class Game {
             }
         } else if (surface.equals("paddleL")){
             // ball bounces off of left paddle
-            if (paddleL.getDY() == 0) {
+            if (paddle1.getDY() == 0) {
                 ball.redirectBall(-ball.getDX(), ball.getDY());
-            } else if (paddleL.getDY() > 0) {
+            } else if (paddle1.getDY() > 0) {
                 ball.redirectBall(Ball.SPEED, Ball.SPEED);
             } else {
                 ball.redirectBall(Ball.SPEED, -Ball.SPEED);
             }
             ball.moveBall();
         } else { // ball bounces off of right paddle
-            if (paddleR.getDY() == 0) {
+            if (paddle2.getDY() == 0) {
                 ball.redirectBall(-ball.getDX(), ball.getDY());
-            } else if (paddleR.getDY() > 0) {
+            } else if (paddle2.getDY() > 0) {
                 ball.redirectBall(-Ball.SPEED, Ball.SPEED);
             } else {
                 ball.redirectBall(-Ball.SPEED, -Ball.SPEED);
@@ -136,28 +178,18 @@ public class Game {
             ball.moveBall();
         }
     }
-    
-    public boolean isGameOver() {
-        return gameOver;
+
+    public GameStatus getStatus() {
+        return status;
     }
 
-    public boolean isGameOn() {
-        return gameOn;
+    public void setStatus(GameStatus s) {
+        status = s;
     }
     
     public int getPrevWinner() {
         return prevWinner;
     }
-    
-    public int getOneScore() {
-        return oneScore;
-    }
-    
-    public int getTwoScore() {
-        return twoScore;
-    }
-
-
 
 
 }

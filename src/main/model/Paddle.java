@@ -19,11 +19,11 @@ public class Paddle {
         this.dY = 0;
     }
 
-    // REQUIRES: |dir_y| = SPEED
+    // REQUIRES: |dy| = SPEED or 0
     // MODIFIES: this
     // EFFECTS: changes the paddle's y speed to the given value
-    public void redirectPaddle(int dir_y) {
-        this.dY = dir_y;
+    public void redirectPaddle(int dy) {
+        this.dY = dy;
     }
 
     // REQUIRES: the new y coordinate is within the bounds of the screen
