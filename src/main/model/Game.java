@@ -5,11 +5,11 @@ import java.awt.Rectangle;
 // Represents a game of pong with a ball and two paddles
 public class Game {
 
-    public static final int CENTRE_X = 1; // the x centre of the screen
-    public static final int CENTRE_Y = 1; // the y centre of the screen
-    private static final int PADDLE_X = 1; // the x distance from each paddle to screen edge
-    public static final int WIDTH = 1; // the width of the screen in pixels
-    public static final int HEIGHT = 1; // the height of the screen in pixels
+    public static final int WIDTH = 800; // the width of the screen in pixels
+    public static final int HEIGHT = 500; // the height of the screen in pixels
+    public static final int CENTRE_X = WIDTH / 2; // the x centre of the screen
+    public static final int CENTRE_Y = HEIGHT / 2; // the y centre of the screen
+    private static final int PADDLE_X = 30; // the x distance from each paddle to screen edge
 
     public static final int MAX_SCORE = 3; // the max score a player can have
 
@@ -65,7 +65,6 @@ public class Game {
     // MODIFIES: this
     // EFFECTS: resets the position of the game's objects, keeping scores and previous winner
     public void reset() {
-        status = GameStatus.BETWEEN_ROUNDS;
         ball = new Ball();
         paddle1 = new Paddle(PADDLE_X);
         paddle2 = new Paddle(WIDTH - PADDLE_X - 1);
@@ -75,7 +74,7 @@ public class Game {
     // MODIFIES: this
     // EFFECTS: increases the goal count for player who scored and updates previous winner
     public void goalScored(int player) {
-        status = GameStatus.BETWEEN_ROUNDS;
+
         if (player == 1) {
             prevWinner = 1;
             score1 += 1;
@@ -83,12 +82,14 @@ public class Game {
             prevWinner = 2;
             score2 += 1;
         }
+        status = GameStatus.BETWEEN_ROUNDS;
     }
 
     // EFFECTS: returns true if there is a game winner
     public boolean checkWinner() {
         return score1 >= MAX_SCORE || score2 >= MAX_SCORE;
     }
+
 
     // REQUIRES: player is 1 or 2, direction is -1 or 0 or 1
     // MODIFIES: this
@@ -160,20 +161,20 @@ public class Game {
         } else if (surface.equals("paddleL")){
             // ball bounces off of left paddle
             if (paddle1.getDY() == 0) {
-                ball.redirectBall(-ball.getDX(), ball.getDY());
+                ball.redirectBall(-ball.getDX() - 1, ball.getDY());
             } else if (paddle1.getDY() > 0) {
-                ball.redirectBall(Ball.SPEED, Ball.SPEED);
+                ball.redirectBall(Ball.SPEED + 1, Ball.SPEED + 1);
             } else {
-                ball.redirectBall(Ball.SPEED, -Ball.SPEED);
+                ball.redirectBall(Ball.SPEED + 1, -Ball.SPEED - 1);
             }
             ball.moveBall();
         } else { // ball bounces off of right paddle
             if (paddle2.getDY() == 0) {
-                ball.redirectBall(-ball.getDX(), ball.getDY());
+                ball.redirectBall(-ball.getDX() - 1, ball.getDY());
             } else if (paddle2.getDY() > 0) {
-                ball.redirectBall(-Ball.SPEED, Ball.SPEED);
+                ball.redirectBall(-Ball.SPEED - 1, Ball.SPEED + 1);
             } else {
-                ball.redirectBall(-Ball.SPEED, -Ball.SPEED);
+                ball.redirectBall(-Ball.SPEED - 1, -Ball.SPEED - 1);
             }
             ball.moveBall();
         }
@@ -186,10 +187,42 @@ public class Game {
     public void setStatus(GameStatus s) {
         status = s;
     }
-    
+
     public int getPrevWinner() {
         return prevWinner;
     }
+    
+    public int getScoreOne() {
+        return score1;
+    }
 
+    public int getScoreTwo() {
+        return score2;
+    }
 
+    public int getBallX() {
+        return ball.getX();
+    }
+
+    public int getBallY() {
+        return ball.getY();
+    }
+
+    public int getPaddleX(int num) {
+        if (num == 1) {
+            return paddle1.getX();
+        } else {
+            return paddle2.getX();
+        }
+
+    }
+
+    public int getPaddleY(int num) {
+        if (num == 1) {
+            return paddle1.getY();
+        } else {
+            return paddle2.getY();
+        }
+
+    }
 }
