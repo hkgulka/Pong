@@ -5,7 +5,7 @@ public class Paddle {
 
     public static final int HEIGHT = 40; // the vertical of the paddle (pixels)
     public static final int WIDTH = 4; // the width of the paddle
-    public static final int SPEED = 10; // the speed of the paddle while moving
+    public static final int SPEED = 8; // the speed of the paddle while moving
 
     private int x; // the x coordinate of the paddle
     private int y; // the y coordinate of the paddle
@@ -15,7 +15,7 @@ public class Paddle {
     // EFFECTS: creates a paddle in the default position, unmoving
     public Paddle(int x_pos) {
         this.x = x_pos;
-        this.y = Game.CENTRE_Y - (HEIGHT / 2);
+        this.y = (Game.HEIGHT / 2) - (HEIGHT / 2);
         this.dY = 0;
     }
 

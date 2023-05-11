@@ -1,6 +1,7 @@
 package main.gui;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.StrokeBorder;
 import java.awt.*;
 
@@ -8,7 +9,7 @@ public class QuitPopUp extends JPanel {
 
     private static final int WIDTH = 350;
     private static final int HEIGHT = 200;
-    private static final int MARGIN = 20;
+    private static final int MARGIN = 30;
     private PongApp gameApp;
     private JLabel text;
     private JButton quitButton;
@@ -20,7 +21,7 @@ public class QuitPopUp extends JPanel {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
         setLayout(new FlowLayout(FlowLayout.CENTER, 1000, MARGIN));
-        setBorder(new StrokeBorder(new BasicStroke(), Color.WHITE));
+        setBorder(new StrokeBorder(new BasicStroke(2), Color.DARK_GRAY));
         initializeText();
         initializeButtons();
     }
@@ -28,8 +29,8 @@ public class QuitPopUp extends JPanel {
     // MODIFIES: this
     // EFFECTS: initializes the text and adds it to the panel
     private void initializeText() {
-        text = new JLabel("Are you sure you want to quit?");
-        text.setFont(new Font("Arial", Font.PLAIN, 20));
+        text = new JLabel("ARE YOU SURE YOU WANT TO QUIT?");
+        text.setFont(new Font("DejaVu Sans Mono", Font.BOLD, 16));
         text.setForeground(Color.WHITE);
         text.setBackground(Color.BLACK);
         add(text);
@@ -38,26 +39,27 @@ public class QuitPopUp extends JPanel {
     // MODIFIES: this
     // EFFECTS: initializes the menu buttons for the panel
     private void initializeButtons() {
-        quitButton = new JButton("QUIT");
+        quitButton = new JButton();
         quitButton.setActionCommand("quit");
-        cancelButton = new JButton("RETURN TO GAME");
+        cancelButton = new JButton();
         cancelButton.setActionCommand("cancel");
 
         JPanel menuArea = new JPanel();
         menuArea.setLayout(new GridLayout(0,1));
         add(menuArea);
 
-        customizeButton(quitButton, menuArea);
-        customizeButton(cancelButton, menuArea);
+        customizeButton(quitButton, menuArea, "Quit.png");
+        customizeButton(cancelButton, menuArea, "Continue.png");
     }
 
     // MODIFIES: this
     // EFFECTS: customizes a button and adds it to p
-    private void customizeButton(JButton b, JPanel p) {
+    private void customizeButton(JButton b, JPanel p, String file) {
         b.addActionListener(gameApp);
-        b.setForeground(Color.BLACK);
-        b.setBackground(Color.WHITE);
-        b.setFont(new Font("Arial", Font.PLAIN, 18));
+        b.setForeground(Color.WHITE);
+        b.setBackground(Color.DARK_GRAY);
+        b.setIcon(new ImageIcon(file));
+        b.setBorder(new BevelBorder(BevelBorder.RAISED));
         b.setFocusable(false);
         p.add(b);
     }

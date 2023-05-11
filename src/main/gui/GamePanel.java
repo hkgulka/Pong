@@ -5,6 +5,7 @@ import main.model.Game;
 import main.model.Paddle;
 
 import javax.swing.*;
+import javax.swing.border.StrokeBorder;
 import java.awt.*;
 
 public class GamePanel extends JPanel {
@@ -21,8 +22,12 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
         setLayout(new FlowLayout(FlowLayout.CENTER, width, MARGIN));
+        setForeground(Color.DARK_GRAY);
+        setBorder(new StrokeBorder(new BasicStroke(2)));
     }
 
+
+    // EFFECTS: paints the components of the game onto the game panel
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
