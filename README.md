@@ -9,6 +9,6 @@ quitting the game early, and the option to play a new match at the end of the ga
 
 # Goals
 
-- Create a functional game that can be played from one computer by running the application
+- Create a functional game that can be played from one computer by running the application - done
 - Alter the game so that it can be run via browser
 - Add multiplayer functionality using web sockets, so that the game can be played on two separate devices (one for each player) in different locations
